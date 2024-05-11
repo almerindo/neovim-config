@@ -1,5 +1,5 @@
 -- Leader key
-vim.g.mapleader = '\\'
+vim.g.mapleader = ' '
 
 -- Local Leader key
 vim.g.maplocalleader = ','

@@ -165,7 +165,7 @@ return require('packer').startup({
     })
 
     -- GitHub co-pilot
-    use('github/copilot.vim')
+    -- use('github/copilot.vim')
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
