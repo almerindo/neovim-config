@@ -167,6 +167,11 @@ return require('packer').startup({
     -- GitHub co-pilot
     use('github/copilot.vim')
 
+
+    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
+      require("config.toggleterm")
+    end }
+
     -- OminiSharp
     --use('OmniSharp/omnisharp-vim')
 

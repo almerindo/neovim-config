@@ -26,3 +26,9 @@ map('n', '<Leader>m', "<cmd>NvimTreeToggle<cr>", opts)
 -- REPL
 map('c', '<C-r>', '<cmd>Lein! with-profiles +dev repl :headless<cr>', opts)
 map('c', '<C-e>', '<cmd>Lein! with-profiles +flutter,+catalyst-start repl :headless<cr>', opts)
+
+map('n', '<leader>tf', '<cmd>:ToggleTerm direction=float<cr>', opts)
+map('n', '<leader>th', '<cmd>:ToggleTerm direction=horizontal<cr>', opts)
+map('n', '<leader>tv', '<cmd>:ToggleTerm direction=vertical<cr>', opts)
+
+
