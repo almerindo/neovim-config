@@ -31,4 +31,3 @@ map('n', '<leader>tf', '<cmd>:ToggleTerm direction=float<cr>', opts)
 map('n', '<leader>th', '<cmd>:ToggleTerm direction=horizontal<cr>', opts)
 map('n', '<leader>tv', '<cmd>:ToggleTerm direction=vertical<cr>', opts)
 
-
