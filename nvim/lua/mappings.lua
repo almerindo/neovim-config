@@ -30,4 +30,5 @@ map('c', '<C-e>', '<cmd>Lein! with-profiles +flutter,+catalyst-start repl :headl
 map('n', '<leader>tf', '<cmd>:ToggleTerm direction=float<cr>', opts)
 map('n', '<leader>th', '<cmd>:ToggleTerm direction=horizontal<cr>', opts)
 map('n', '<leader>tv', '<cmd>:ToggleTerm direction=vertical<cr>', opts)
+map('n', '<leader><leader>', ':b#<CR>', opts)
 
