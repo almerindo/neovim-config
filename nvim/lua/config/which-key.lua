@@ -29,12 +29,19 @@ wk.register({
 -- Mapeamentos para o prefixo <LocalLeader>
 wk.register({
   f = {
-    name = "Telescope",  -- Nome do grupo para Telescope
-    f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "Find Files" },
-    g = { "<cmd>lua require('telescope.builtin').live_grep()<cr>", "Live Grep" },
-    b = { "<cmd>lua require('telescope.builtin').buffers()<cr>", "Buffers" },
-    h = { "<cmd>lua require('telescope.builtin').help_tags()<cr>", "Help Tags" },
-    n = { "<cmd>lua require('telescope').extensions.notify.notify()<cr>", "Notifications" },
+    name = "telescope",  -- nome do grupo para telescope
+    f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "find files" },
+    g = { "<cmd>lua require('telescope.builtin').live_grep()<cr>", "live grep" },
+    b = { "<cmd>lua require('telescope.builtin').buffers()<cr>", "buffers" },
+    h = { "<cmd>lua require('telescope.builtin').help_tags()<cr>", "help tags" },
+    n = { "<cmd>lua require('telescope').extensions.notify.notify()<cr>", "notifications" },
   },
-}, { prefix = "<LocalLeader>" })
+}, { prefix = "<localleader>" })
+
+wk.register({
+  [">)"] = { "<Plug>(sexp_slurp_forward)", "Slurp Right" },
+  ["<)"] = { "<Plug>(sexp_barf_forward)", "Barf Right" },
+  [">("] = { "<Plug>(sexp_slurp_backward)", "Slurp Left" },
+  ["<("] = { "<Plug>(sexp_barf_backward)", "Barf Left" },
+}, { mode = "n" })
 
