@@ -2,6 +2,8 @@ local wk = require("which-key")
 
 wk.setup {
   -- Qualquer configuração específica do which-key
+  notify = false,  -- Desativa as notificações de verificação de saúde
+  preset = "modern",  -- Define o estilo de apresentação
 }
 
 -- Mapeamentos para o prefixo <leader>
