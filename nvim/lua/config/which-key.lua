@@ -13,8 +13,7 @@ wk.register({
       h = { "<cmd>:ToggleTerm direction=horizontal<cr>", "Horizontal Terminal" },
       v = { "<cmd>:ToggleTerm direction=vertical<cr>", "Vertical Terminal" },
     },
-    n = { ":bnext<CR>", "Next Buffer" },  -- Adiciona mapeamento para o próximo buffer
-
+    n = { ":bnext<CR>", "Next Buffer" }, -- Adiciona mapeamento para o próximo buffer
   },
   ["<LocalLeader>"] = {
     f = {
@@ -30,7 +29,8 @@ wk.register({
     r = { "<cmd>Lein! with-profiles +dev repl :headless<cr>", "Clojure REPL Dev" },
     e = { "<cmd>Lein! with-profiles +flutter,+catalyst-start repl :headless<cr>", "Clojure REPL Flutter/Catalyst" },
   },
+  f = {
+    name = "Format",
+    f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "File" },
+  },
 }, { prefix = "<leader>" })
-
--- Adicione outros atalhos que você deseja configurar aqui
-
