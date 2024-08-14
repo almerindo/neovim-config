@@ -10,6 +10,7 @@ wk.setup {
 wk.register({
   m = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree" },
   n = { ":bnext<CR>", "Next Buffer" },
+  b = { ":bprevious<CR>", "Previous Buffer" },
   t = {
     name = "Terminal",  -- Nome do grupo para Terminal
     f = { "<cmd>:ToggleTerm direction=float<cr>", "Float Terminal" },
