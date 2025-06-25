@@ -19,7 +19,8 @@ wk.register({
   },
   f = {
     name = "Format",  -- Nome do grupo para formatação
-    f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format File" },
+    -- Use the newer vim.lsp.buf.format API
+    f = { "<cmd>lua vim.lsp.buf.format()<CR>", "Format File" },
   },
   c = {
     r = { "<cmd>Lein! with-profiles +dev repl :headless<cr>", "Clojure REPL Dev" },

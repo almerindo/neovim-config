@@ -1,0 +1,5 @@
+# Ignore compiled plugin file
+nvim/plugin/packer_compiled.lua
+# Optional: ignore local packages and caches
+.nvim*
+cache/
