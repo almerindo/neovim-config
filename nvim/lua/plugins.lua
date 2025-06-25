@@ -37,6 +37,14 @@ return require('packer').startup({
       end
     })
 
+    use {
+      "pmizio/typescript-tools.nvim",
+      requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+      config = function()
+        require("typescript-tools").setup {}
+      end,
+    }
+
     -- Highly extendable fuzzy finder over lists
     use({
       'nvim-telescope/telescope.nvim',
