@@ -18,6 +18,8 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup('plugins', {
   ui = { border = 'rounded' },
   change_detection = { notify = false },
+  -- No plugin here needs luarocks; disabling it avoids a hererocks health error.
+  rocks = { enabled = false },
 })
 
 require('mappings')
