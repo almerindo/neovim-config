@@ -1,49 +1,36 @@
-local wk = require("which-key")
+local wk = require('which-key')
 
-wk.setup {
-  -- Qualquer configuração específica do which-key
-  notify = false,  -- Desativa as notificações de verificação de saúde
-  preset = "modern",  -- Define o estilo de apresentação
-}
+wk.setup({
+  notify = false,
+  preset = 'modern',
+})
 
--- Mapeamentos para o prefixo <leader>
-wk.register({
-  m = { "<cmd>NvimTreeToggle<cr>", "Toggle NvimTree" },
-  n = { ":bnext<CR>", "Next Buffer" },
-  b = { ":bprevious<CR>", "Previous Buffer" },
-  t = {
-    name = "Terminal",  -- Nome do grupo para Terminal
-    f = { "<cmd>:ToggleTerm direction=float<cr>", "Float Terminal" },
-    h = { "<cmd>:ToggleTerm direction=horizontal<cr>", "Horizontal Terminal" },
-    v = { "<cmd>:ToggleTerm direction=vertical<cr>", "Vertical Terminal" },
+-- which-key v3 replaced wk.register() with the list-based wk.add()
+wk.add({
+  { '<leader>m', '<cmd>NvimTreeToggle<cr>', desc = 'Toggle NvimTree' },
+  { '<leader>n', '<cmd>bnext<cr>', desc = 'Next Buffer' },
+  { '<leader>b', '<cmd>bprevious<cr>', desc = 'Previous Buffer' },
+
+  { '<leader>t', group = 'Terminal' },
+  { '<leader>tf', '<cmd>ToggleTerm direction=float<cr>', desc = 'Float Terminal' },
+  { '<leader>th', '<cmd>ToggleTerm direction=horizontal<cr>', desc = 'Horizontal Terminal' },
+  { '<leader>tv', '<cmd>ToggleTerm direction=vertical<cr>', desc = 'Vertical Terminal' },
+
+  { '<leader>f', group = 'Format' },
+  {
+    '<leader>ff',
+    function()
+      require('conform').format({ async = true, lsp_format = 'fallback' })
+    end,
+    desc = 'Format File',
   },
-  f = {
-    name = "Format",  -- Nome do grupo para formatação
-    -- Use the newer vim.lsp.buf.format API
-    f = { "<cmd>lua vim.lsp.buf.format()<CR>", "Format File" },
-  },
-  c = {
-    r = { "<cmd>Lein! with-profiles +dev repl :headless<cr>", "Clojure REPL Dev" },
-    e = { "<cmd>Lein! with-profiles +flutter,+catalyst-start repl :headless<cr>", "Clojure REPL Flutter/Catalyst" },
-  },
-}, { prefix = "<leader>" })
 
--- Mapeamentos para o prefixo <LocalLeader>
-wk.register({
-  f = {
-    name = "telescope",  -- nome do grupo para telescope
-    f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "find files" },
-    g = { "<cmd>lua require('telescope.builtin').live_grep()<cr>", "live grep" },
-    b = { "<cmd>lua require('telescope.builtin').buffers()<cr>", "buffers" },
-    h = { "<cmd>lua require('telescope.builtin').help_tags()<cr>", "help tags" },
-    n = { "<cmd>lua require('telescope').extensions.notify.notify()<cr>", "notifications" },
-  },
-}, { prefix = "<localleader>" })
+  -- <leader>a (Claude Code) is registered by the plugin spec in lua/plugins.lua
 
-wk.register({
-  [">)"] = { "<Plug>(sexp_slurp_forward)", "Slurp Right" },
-  ["<)"] = { "<Plug>(sexp_barf_forward)", "Barf Right" },
-  [">("] = { "<Plug>(sexp_slurp_backward)", "Slurp Left" },
-  ["<("] = { "<Plug>(sexp_barf_backward)", "Barf Left" },
-}, { mode = "n" })
-
+  { '<localleader>f', group = 'Telescope' },
+  { '<localleader>ff', function() require('telescope.builtin').find_files() end, desc = 'Find Files' },
+  { '<localleader>fg', function() require('telescope.builtin').live_grep() end, desc = 'Live Grep' },
+  { '<localleader>fb', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
+  { '<localleader>fh', function() require('telescope.builtin').help_tags() end, desc = 'Help Tags' },
+  { '<localleader>fn', function() require('telescope').extensions.notify.notify() end, desc = 'Notifications' },
+})

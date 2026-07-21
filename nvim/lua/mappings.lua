@@ -1,35 +1,23 @@
--- Leader key
-vim.g.mapleader = ' '
+-- Leader keys are set in init.lua, before lazy.nvim loads.
+-- Most <leader>/<localleader> mappings live in lua/config/which-key.lua so they
+-- get descriptions in the which-key popup. This file holds the rest.
 
--- Local Leader key
-vim.g.maplocalleader = ','
-
--- alias to map function and options
-local map = vim.api.nvim_set_keymap
-
--- map options
+local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
--- Telescope
-map('n', '<LocalLeader>ff', "<cmd>lua require('telescope.builtin').find_files()<cr>", opts)
-map('n', '<LocalLeader>fg', "<cmd>lua require('telescope.builtin').live_grep()<cr>", opts)
-map('n', '<LocalLeader>fb', "<cmd>lua require('telescope.builtin').buffers()<cr>", opts)
-map('n', '<LocalLeader>fh', "<cmd>lua require('telescope.builtin').help_tags()<cr>", opts)
-map('n', '<LocalLeader>fn', "<cmd>lua require('telescope').extensions.notify.notify()<cr>", opts)
+-- Clear search highlight
+map('n', '<Esc>', '<cmd>nohlsearch<cr>', opts)
 
--- LSP
--- see lua/config/lsp/options.lua
+-- Keep the cursor centred when jumping through search results
+map('n', 'n', 'nzzzv', opts)
+map('n', 'N', 'Nzzzv', opts)
 
--- NvimTree
-map('n', '<Leader>m', "<cmd>NvimTreeToggle<cr>", opts)
+-- Move selected lines up/down in visual mode
+map('v', 'J', ":m '>+1<cr>gv=gv", opts)
+map('v', 'K', ":m '<-2<cr>gv=gv", opts)
 
--- REPL
-map('c', '<C-r>', '<cmd>Lein! with-profiles +dev repl :headless<cr>', opts)
-map('c', '<C-e>', '<cmd>Lein! with-profiles +flutter,+catalyst-start repl :headless<cr>', opts)
+-- Keep the yanked register when pasting over a selection
+map('x', '<leader>p', '"_dP', opts)
 
-map('n', '<leader>tf', '<cmd>:ToggleTerm direction=float<cr>', opts)
-map('n', '<leader>th', '<cmd>:ToggleTerm direction=horizontal<cr>', opts)
-map('n', '<leader>tv', '<cmd>:ToggleTerm direction=vertical<cr>', opts)
-
--- Buffer navigation
-map('n', '<Leader>b', ':bprevious<CR>', opts)
+-- Escape terminal mode
+map('t', '<Esc><Esc>', [[<C-\><C-n>]], opts)

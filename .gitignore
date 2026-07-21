@@ -3,3 +3,6 @@ nvim/plugin/packer_compiled.lua
 # Optional: ignore local packages and caches
 .nvim*
 cache/
+
+# lazy.nvim state
+.luarc.json
