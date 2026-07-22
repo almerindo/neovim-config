@@ -1,208 +1,176 @@
--- Automatically install and set up packer.nvim
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
-end
+-- Plugin specs for lazy.nvim
+return {
+  -- Theme --------------------------------------------------------------------
+  {
+    'navarasu/onedark.nvim',
+    lazy = false,
+    priority = 1000, -- load before everything else so highlights are set early
+    config = function()
+      require('config.onedark')
+    end,
+  },
 
-local packer_bootstrap = ensure_packer()
+  -- UI -----------------------------------------------------------------------
+  {
+    'rcarriga/nvim-notify',
+    config = function()
+      require('config.notify')
+      vim.notify = require('notify')
+    end,
+  },
 
--- Automatically run :PackerCompile whenever plugins.lua is updated
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('config.lualine')
+    end,
+  },
 
-return require('packer').startup({
-  function(use)
-    -- Packer can manage itself
-    use('wbthomason/packer.nvim')
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('config.tree')
+    end,
+  },
 
-    -- Atom's iconic One Dark theme for Neovim
-    use('navarasu/onedark.nvim')
+  {
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('config.which-key')
+    end,
+  },
 
-    -- Notifications component
-    use({
-      'rcarriga/nvim-notify',
-      config = function()
-        require('config.notify')
-        vim.notify = require('notify')
-      end
-    })
+  {
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = function()
+      require('config.toggleterm')
+    end,
+  },
 
-    use {
-      "pmizio/typescript-tools.nvim",
-      requires = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-      config = function()
-        require("typescript-tools").setup {}
-      end,
-    }
+  -- Fuzzy finder -------------------------------------------------------------
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-lua/popup.nvim',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      'nvim-telescope/telescope-ui-select.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('config.telescope')
+    end,
+  },
 
-    -- Highly extendable fuzzy finder over lists
-    use({
-      'nvim-telescope/telescope.nvim',
-      requires = {
-        { 'nvim-lua/plenary.nvim' },
-        { 'nvim-lua/popup.nvim' },
-        { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
-        { 'nvim-telescope/telescope-ui-select.nvim' },
-        { 'kyazdani42/nvim-web-devicons' },
-      },
-      config = function()
-        require('config.telescope')
-      end,
-    })
+  -- Syntax -------------------------------------------------------------------
+  {
+    'nvim-treesitter/nvim-treesitter',
+    -- Pinned to master: the `main` branch is a rewrite with a different API,
+    -- and lua/config/treesitter.lua uses the `nvim-treesitter.configs` API.
+    branch = 'master',
+    build = ':TSUpdate',
+    dependencies = { 'HiPhish/rainbow-delimiters.nvim' },
+    config = function()
+      require('config.treesitter')
+    end,
+  },
 
-    use {
-      'nvim-tree/nvim-tree.lua',
-      requires = {
-        { 'nvim-tree/nvim-web-devicons' },
-      },
-      config = function()
-        require('config.tree')
-      end,
-    }
+  -- Editing ------------------------------------------------------------------
+  'tpope/vim-surround',    -- surround parentheses
+  'tpope/vim-repeat',      -- make `.` work with plugin maps
+  'tpope/vim-commentary',  -- gcc to comment out a line
+  'mg979/vim-visual-multi', -- multi-cursor
 
-    use({
-      'nvim-lualine/lualine.nvim',
-      requires = { 'kyazdani42/nvim-web-devicons', opt = true },
-      config = function()
-        require('config.lualine')
-      end,
-    })
+  -- Git ----------------------------------------------------------------------
+  { 'airblade/vim-gitgutter', branch = 'main' },
+  'tpope/vim-fugitive',
 
-    -- Syntax highlighting
-    use({
-      'nvim-treesitter/nvim-treesitter',
-      requires = { { 'p00f/nvim-ts-rainbow', 'nvim-treesitter/playground' } },
-      run = function()
-        local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-        ts_update()
-      end,
-      config = function()
-        require('config.treesitter')
-      end,
-    })
+  -- LSP + completion ---------------------------------------------------------
+  {
+    'neovim/nvim-lspconfig',
+    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = {
+      { 'williamboman/mason.nvim', config = true },
+      'williamboman/mason-lspconfig.nvim',
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    config = function()
+      require('config.lsp.setup')
+    end,
+  },
 
-    -- Text view and manipulation
-    use({
-      'guns/vim-sexp',                              -- sexp
-      'tpope/vim-sexp-mappings-for-regular-people', -- more acessible sexp mappings
-      'tpope/vim-surround',                         -- surround parentheses
-      'tpope/vim-repeat',                           -- remaps . in a way that plugins can tap into it
-      'tpope/vim-commentary',                       -- use gcc to comment out a line
-      'mg979/vim-visual-multi',                     -- select multi lines
-    })
+  {
+    'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'f3fora/cmp-spell',
+      'hrsh7th/cmp-vsnip',
+      'hrsh7th/vim-vsnip',
+      'rafamadriz/friendly-snippets',
+      'onsails/lspkind.nvim',
+    },
+    config = function()
+      require('config.lsp.completion')
+    end,
+  },
 
-    --  Neovim job control
-    use({
-      'tpope/vim-dispatch',
-      'clojure-vim/vim-jack-in',
-      'radenling/vim-dispatch-neovim'
-    })
+  -- Formatting ---------------------------------------------------------------
+  {
+    'stevearc/conform.nvim',
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    config = function()
+      require('config.lsp.conform')
+    end,
+  },
 
-    -- Git visualization and commands
-    use({
-      'airblade/vim-gitgutter', branch = 'main'
-    })
+  -- .NET ---------------------------------------------------------------------
+  {
+    'seblyng/roslyn.nvim',
+    ft = { 'cs' },
+    opts = {
+      filewatching = 'auto',
+    },
+  },
 
-    use({
-      'tpope/vim-fugitive'
-    })
+  -- Claude Code --------------------------------------------------------------
+  {
+    'coder/claudecode.nvim',
+    dependencies = { 'folke/snacks.nvim' },
+    opts = {
+      terminal_cmd = vim.fn.expand('~/.local/bin/claude'),
+    },
+    keys = {
+      { '<leader>a', nil, desc = 'AI/Claude Code' },
+      { '<leader>ac', '<cmd>ClaudeCode<cr>', desc = 'Toggle Claude' },
+      { '<leader>af', '<cmd>ClaudeCodeFocus<cr>', desc = 'Focus Claude' },
+      { '<leader>ar', '<cmd>ClaudeCode --resume<cr>', desc = 'Resume Claude' },
+      { '<leader>aC', '<cmd>ClaudeCode --continue<cr>', desc = 'Continue Claude' },
+      { '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', desc = 'Select Claude model' },
+      { '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', desc = 'Add current buffer' },
+      { '<leader>as', '<cmd>ClaudeCodeSend<cr>', mode = 'v', desc = 'Send selection to Claude' },
+      { '<leader>as', '<cmd>ClaudeCodeTreeAdd<cr>', ft = { 'NvimTree' }, desc = 'Add file to Claude' },
+      { '<leader>aa', '<cmd>ClaudeCodeDiffAccept<cr>', desc = 'Accept diff' },
+      { '<leader>ad', '<cmd>ClaudeCodeDiffDeny<cr>', desc = 'Deny diff' },
+    },
+  },
 
-    -- A cross platform terminal image viewer for Neovim (ONLY if using Kitty terminal)
-    use({
-      'edluffy/hologram.nvim',
-      config = function()
-        require('config.hologram')
-      end,
-    })
-
-    -- LSP
-    use({
-      'williamboman/mason.nvim',
-      requires = {
-        -- LSP Support
-        { 'neovim/nvim-lspconfig' },
-        { 'williamboman/mason-lspconfig.nvim' },
-        -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'f3fora/cmp-spell' },
-        { 'hrsh7th/cmp-vsnip' },
-        { 'hrsh7th/vim-vsnip' },
-        { 'hrsh7th/cmp-nvim-lsp' },
-        { 'hrsh7th/cmp-nvim-lua' },
-        -- Snippets
-        { 'rafamadriz/friendly-snippets' },
-        -- vscode-like pictograms
-        { 'onsails/lspkind.nvim' },
-      },
-      config = function()
-        require('config.lsp.setup')
-      end,
-    })
-
-    -- Clojure REPL
-    use({
-      'Olical/conjure',
-      requires = { 'm00qek/baleia.nvim' },
-      config = function()
-        require('config.conjure')
-      end,
-    })
-
-    -- Markdown previewer
-    use({
-      'iamcco/markdown-preview.nvim',
-      run = function()
-        vim.fn["mkdp#util#install"]()
-      end,
-      setup = function()
-        vim.g.mkdp_filetypes = { 'markdown' }
-      end,
-      ft = { 'markdown' },
-    })
-
-    -- GitHub co-pilot
-    use('github/copilot.vim')
-
-
-    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-      require("config.toggleterm")
-    end }
-
-
-    use { "folke/which-key.nvim", config = function()
-      require("config.which-key")
-    end }
-
-    -- Automatically set up your configuration after cloning packer.nvim
-    -- Put this at the end after all plugins
-    if packer_bootstrap then
-      require('packer').sync()
-    end
-  end,
-  -- Set packer to opens a float windows instead of split screen
-  config = {
-    display = {
-      open_fn = function()
-        return require('packer.util').float({ border = 'rounded' })
-      end,
-      working_sym = '',
-      error_sym = '',
-      done_sym = '',
-      removed_sym = '',
-      moved_sym = '',
-      prompt_border = 'rounded'
-    }
-  }
-})
+  -- Markdown -----------------------------------------------------------------
+  {
+    'iamcco/markdown-preview.nvim',
+    ft = { 'markdown' },
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
+    init = function()
+      vim.g.mkdp_filetypes = { 'markdown' }
+    end,
+  },
+}

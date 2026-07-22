@@ -1,29 +1,21 @@
--- Diagnostic icons
-local signs = {
-  Error = ' ',
-  Warn = ' ',
-  Hint = '硫',
-  Info = ' ',
-}
-
-for type, icon in pairs(signs) do
-  local hl = 'DiagnosticSign' .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = '' })
-end
-
+-- Diagnostics. On 0.11+ signs are configured through vim.diagnostic.config
+-- rather than vim.fn.sign_define, and handler borders through the `float` key.
+-- Icons are written as \u{} escapes rather than literal glyphs so they survive
+-- copy/paste and editors that mangle private-use codepoints.
+-- Requires a Nerd Font (v3+) in the terminal; see README.
 vim.diagnostic.config({
-  virtual_text = {
-    prefix = ""
-  }
+  virtual_text = { prefix = '\u{f444}' }, --
+  severity_sort = true,
+  float = { border = 'rounded', source = true },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '\u{f057} ', --
+      [vim.diagnostic.severity.WARN] = '\u{f071} ', --
+      [vim.diagnostic.severity.HINT] = '\u{f0eb} ', --
+      [vim.diagnostic.severity.INFO] = '\u{f05a} ', --
+    },
+  },
 })
 
--- Border
-_G.border = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' }
-
--- Docs Window
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
-
--- set border in lspconfig
--- https://neovim.discourse.group/t/lspinfo-window-border/1566/5
-require('lspconfig.ui.windows').default_options.border = 'rounded'
+-- Rounded borders for hover and signature help windows
+vim.o.winborder = 'rounded'

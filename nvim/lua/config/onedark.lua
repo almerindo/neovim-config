@@ -27,12 +27,7 @@ require('onedark').setup {
 
     -- Custom Highlights --
     colors = {}, -- Override default colors
-    highlights = { -- Override highlight groups
-      clojureTSVariable = { fg = '#abb2bf' },
-      clojureTSType = { fg = '#abb2bf' },
-      clojureTSNamespace = { fg = '#e5c07b' },
-      clojureTSFuncBuiltin = { fg = '#56b6c2' }
-    },
+    highlights = {}, -- Override highlight groups
 
     -- Plugins Config --
     diagnostics = {
@@ -40,14 +35,5 @@ require('onedark').setup {
         undercurl = true,   -- use undercurl instead of underline for diagnostics
         background = true,    -- use background color for virtual text
     },
-
-  -- overrides = function(c)
-  --   return {
-  --     clojureTSVariable = { fg = c.fg0 },
-  --     clojureTSType = { fg = c.fg0 },
-  --     clojureTSNamespace = { fg = c.yellow1 },
-  --     clojureTSFuncBuiltin = { fg = c.cyan0 }
-  --   }
-  -- end
 }
 require('onedark').load()
